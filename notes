@@ -50,3 +50,29 @@ The admin user is specific to Debian. If not using Debian please use the appropr
  * read about installing addons: https://github.com/kubernetes/kops/blob/master/docs/addons.md
  
  
+
+ubuntu@ubuntu-xenial:~/.kube$ kubectl get node
+NAME                            STATUS    ROLES     AGE       VERSION
+ip-172-20-33-141.ec2.internal   Ready     master    23m       v1.8.6
+ip-172-20-41-186.ec2.internal   Ready     node      22m       v1.8.6
+ip-172-20-57-116.ec2.internal   Ready     node      22m       v1.8.6
+
+
+
+ubuntu@ubuntu-xenial:~/.kube$ kubectl run hello-minikube --image=gcr.io/google_containers/echoserver:1.4 --port=9080
+deployment "hello-minikube" created
+
+hello-minikubeubuntu@ubuntu-xenial:~/.kube$ kubectl expose deployment hello-minikube --type=NodePort
+service "hello-minikube" exposed
+
+
+
+ubuntu@ubuntu-xenial:~/.kube$ kubectl get service
+NAME             TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+hello-minikube   NodePort    100.64.117.71   <none>        9080:31598/TCP   38s
+kubernetes       ClusterIP   100.64.0.1      <none>        443/TCP          31m
+
+
+ubuntu@ubuntu-xenial:~/.kube$ kops delete cluster --name=kubernetes.pickyprivacy.tech --yes --state=s3://kops-state-abcd1234
+
+
