@@ -15,4 +15,38 @@ Finally configure your cluster with: kops update cluster kubernetes.pickyprivacy
 
 
 
+ubuntu@ubuntu-xenial:~/git_ku$ kops update cluster kubernetes.pickyprivacy.tech --yes --state=s3://kops-state-
+abcd1234
+I0202 19:16:24.056880    9073 executor.go:91] Tasks: 0 done / 73 total; 31 can run
+I0202 19:16:25.145199    9073 vfs_castore.go:430] Issuing new certificate: "ca"
+I0202 19:16:25.165190    9073 vfs_castore.go:430] Issuing new certificate: "apiserver-aggregator-ca"
+I0202 19:16:25.982422    9073 executor.go:91] Tasks: 31 done / 73 total; 24 can run
+I0202 19:16:27.412914    9073 vfs_castore.go:430] Issuing new certificate: "kubelet"
+I0202 19:16:27.527240    9073 vfs_castore.go:430] Issuing new certificate: "kube-proxy"
+I0202 19:16:27.625573    9073 vfs_castore.go:430] Issuing new certificate: "apiserver-proxy-client"
+I0202 19:16:27.753642    9073 vfs_castore.go:430] Issuing new certificate: "apiserver-aggregator"
+I0202 19:16:27.853057    9073 vfs_castore.go:430] Issuing new certificate: "kube-scheduler"
+I0202 19:16:28.507957    9073 vfs_castore.go:430] Issuing new certificate: "kubecfg"
+I0202 19:16:28.725199    9073 vfs_castore.go:430] Issuing new certificate: "kube-controller-manager"
+I0202 19:16:28.855851    9073 vfs_castore.go:430] Issuing new certificate: "kops"
+I0202 19:16:28.867621    9073 vfs_castore.go:430] Issuing new certificate: "kubelet-api"
+I0202 19:16:28.980049    9073 vfs_castore.go:430] Issuing new certificate: "master"
+I0202 19:16:29.708132    9073 executor.go:91] Tasks: 55 done / 73 total; 16 can run
+I0202 19:16:30.809785    9073 launchconfiguration.go:333] waiting for IAM instance profile "nodes.kubernetes.pickyprivacy.tech" to be ready
+I0202 19:16:30.851169    9073 launchconfiguration.go:333] waiting for IAM instance profile "masters.kubernetes.pickyprivacy.tech" to be ready
+I0202 19:16:41.558527    9073 executor.go:91] Tasks: 71 done / 73 total; 2 can run
+I0202 19:16:42.366127    9073 executor.go:91] Tasks: 73 done / 73 total; 0 can run
+I0202 19:16:42.366255    9073 dns.go:153] Pre-creating DNS records
+I0202 19:16:43.246256    9073 update_cluster.go:248] Exporting kubecfg for cluster
+kops has set your kubectl context to kubernetes.pickyprivacy.tech
 
+Cluster is starting.  It should be ready in a few minutes.
+
+Suggestions:
+ * validate cluster: kops validate cluster
+ * list nodes: kubectl get nodes --show-labels
+ * ssh to the master: ssh -i ~/.ssh/id_rsa admin@api.kubernetes.pickyprivacy.tech
+The admin user is specific to Debian. If not using Debian please use the appropriate user based on your OS.
+ * read about installing addons: https://github.com/kubernetes/kops/blob/master/docs/addons.md
+ 
+ 
