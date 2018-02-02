@@ -1,0 +1,7 @@
+ubuntu@ubuntu-xenial:~/.ssh$ kops create cluster --name=kubernetes.pickyprivacy.tech --state=s3://kops-state-a
+bcd1234 --zones=us-east-1a --node-count=2 --node-size=t2.micro --master-size=t2.micro --dns-zone=kubernetes.pi
+ckyprivacy.tech
+
+
+
+
