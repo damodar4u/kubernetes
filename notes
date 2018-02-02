@@ -3,5 +3,16 @@ bcd1234 --zones=us-east-1a --node-count=2 --node-size=t2.micro --master-size=t2.
 ckyprivacy.tech
 
 
+Cluster configuration has been created.
+
+Suggestions:
+ * list clusters with: kops get cluster
+ * edit this cluster with: kops edit cluster kubernetes.pickyprivacy.tech
+ * edit your node instance group: kops edit ig --name=kubernetes.pickyprivacy.tech nodes
+ * edit your master instance group: kops edit ig --name=kubernetes.pickyprivacy.tech master-us-east-1a
+
+Finally configure your cluster with: kops update cluster kubernetes.pickyprivacy.tech --yes
+
+
 
 
