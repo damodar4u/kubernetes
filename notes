@@ -76,3 +76,184 @@ kubernetes       ClusterIP   100.64.0.1      <none>        443/TCP          31m
 ubuntu@ubuntu-xenial:~/.kube$ kops delete cluster --name=kubernetes.pickyprivacy.tech --yes --state=s3://kops-state-abcd1234
 
 
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl create -f replication-controller/helloworld-repl-controller.yml
+replicationcontroller "helloworld-controller" created
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get pods
+NAME                          READY     STATUS    RESTARTS   AGE
+helloworld-controller-mm48g   1/1       Running   0          30s
+nodehelloworld.example.com    1/1       Running   0          1d
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl describe pod nodehelloworld.example.com                                                    
+Name:           nodehelloworld.example.com                                                                                                   
+Namespace:      default                                                                                                                      
+Node:           ip-172-20-57-184.ec2.internal/172.20.57.184                                                                                  
+Start Time:     Mon, 05 Feb 2018 19:43:17 +0000                                                                                              
+Labels:         app=helloworld                                                                                                               
+Annotations:    kubernetes.io/limit-ranger=LimitRanger plugin set: cpu request for container k8s-demo                                        
+Status:         Running                                                                                                                      
+IP:             100.96.2.3                                                                                                                   
+Controlled By:  ReplicationController/helloworld-controller                                                                                  
+Containers:                                                                                                                                  
+  k8s-demo:                                                                                                                                  
+    Container ID:   docker://62bf53252e358d3a41965364fb46cd2c294582f9ec471b6b4c36136a6459ac76                                                
+    Image:          wardviaene/k8s-demo                                                                                                      
+    
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl delete pod nodehelloworld.example.com
+pod "nodehelloworld.example.com" deleted
+
+    
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get pods
+NAME                          READY     STATUS        RESTARTS   AGE
+helloworld-controller-cc27q   1/1       Running       0          11s
+helloworld-controller-mm48g   1/1       Running       0          5m
+nodehelloworld.example.com    1/1       Terminating   0          1d
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl scale --replicas=4 -f replication-controller/helloworld-repl-controller.yml
+replicationcontroller "helloworld-controller" scaled
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get pods
+NAME                          READY     STATUS    RESTARTS   AGE
+helloworld-controller-6h9jb   1/1       Running   0          17s
+helloworld-controller-cc27q   1/1       Running   0          9m
+helloworld-controller-mm48g   1/1       Running   0          15m
+helloworld-controller-vtdhl   1/1       Running   0          17s
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get rc
+NAME                    DESIRED   CURRENT   READY     AGE
+helloworld-controller   4         4         4         19m
+
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl scale --replicas=1 rc/helloworld-controller
+replicationcontroller "helloworld-controller" scaled
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get pods
+NAME                          READY     STATUS        RESTARTS   AGE
+helloworld-controller-6h9jb   1/1       Terminating   0          6m
+helloworld-controller-cc27q   1/1       Terminating   0          15m
+helloworld-controller-mm48g   1/1       Running       0          21m
+helloworld-controller-vtdhl   1/1       Terminating   0          6m
+
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get rs
+No resources found.
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get rc
+NAME                    DESIRED   CURRENT   READY     AGE
+helloworld-controller   1         1         1         41m
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get deployments
+No resources found.
+
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get pods --show-labels
+NAME                          READY     STATUS    RESTARTS   AGE       LABELS
+helloworld-controller-mm48g   1/1       Running   0          42m       app=helloworld
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl rollout status deployment/helloworld-deployment
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl set image deployment/helloworld-deployment k8s-demo=k8s-demo:2
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl edit deployment/helloworld-deployment
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl rollout status deployment/helloworld-deployment
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl rollout history deployment/helloworld-deployment
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl rollout undo deployment/helloworld-deployment
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl rollout undo deployment/helloworld-deployment --to-revision=n
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl create -f deployment/helloworld.yml
+deployment "helloworld-deployment" created
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl create -f deployment/helloworld.yml
+deployment "helloworld-deployment" created
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get deployments
+NAME                    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+helloworld-deployment   3         3         3            3           1m
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get rs
+NAME                               DESIRED   CURRENT   READY     AGE
+helloworld-deployment-57949f6b74   3         3         3         1m
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get pods
+NAME                                     READY     STATUS    RESTARTS   AGE
+helloworld-controller-mm48g              1/1       Running   0          53m
+helloworld-deployment-57949f6b74-28b27   1/1       Running   0          1m
+helloworld-deployment-57949f6b74-nkggh   1/1       Running   0          1m
+helloworld-deployment-57949f6b74-t6nwr   1/1       Running   0          1m
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl scale --replicas=0 rc/helloworld-controller
+replicationcontroller "helloworld-controller" scaled
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get pods
+NAME                                     READY     STATUS    RESTARTS   AGE
+helloworld-deployment-57949f6b74-28b27   1/1       Running   0          5m
+helloworld-deployment-57949f6b74-nkggh   1/1       Running   0          5m
+helloworld-deployment-57949f6b74-t6nwr   1/1       Running   0          5m
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get pods --show-labels
+NAME                                     READY     STATUS    RESTARTS   AGE       LABELS
+helloworld-deployment-57949f6b74-28b27   1/1       Running   0          6m        app=helloworld,pod-template-hash=1350592630
+helloworld-deployment-57949f6b74-nkggh   1/1       Running   0          6m        app=helloworld,pod-template-hash=1350592630
+helloworld-deployment-57949f6b74-t6nwr   1/1       Running   0          6m        app=helloworld,pod-template-hash=1350592630
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get deployments
+NAME                    DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+helloworld-deployment   3         3         3            3           8m
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$  kubectl rollout status deployment/helloworld-deployment
+deployment "helloworld-deployment" successfully rolled out
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl expose deployment helloworld-deployment --type=NodePort
+service "helloworld-deployment" exposed
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl get services
+NAME                    TYPE           CLUSTER-IP       EXTERNAL-IP        PORT(S)          AGE
+helloworld-deployment   NodePort       100.64.121.197   <none>             3000:31999/TCP   13s
+helloworld-service      LoadBalancer   100.71.227.188   acad7b6fb0aac...   80:32658/TCP     1d
+kubernetes              ClusterIP      100.64.0.1       <none>             443/TCP          1d
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl describe service helloworld-deployment
+Name:                     helloworld-deployment
+Namespace:                default
+Labels:                   app=helloworld
+Annotations:              <none>
+Selector:                 app=helloworld
+Type:                     NodePort
+IP:                       100.64.121.197
+Port:                     <unset>  3000/TCP
+TargetPort:               3000/TCP
+NodePort:                 <unset>  31999/TCP
+Endpoints:                100.96.1.6:3000,100.96.2.6:3000,100.96.2.7:3000
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+
+
+
+
+
+
+
+
