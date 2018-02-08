@@ -253,6 +253,20 @@ Events:                   <none>
 
 
 
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl set image deployment/helloworld-deployment k8s-demo=wardviane/k8s-demo:2
+deployment "helloworld-deployment" image updated
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl rollout status deployment/helloworld-deployment
+Unable to connect to the server: dial tcp: lookup api.kubernetes.pickyprivacy.tech on 10.0.2.3:53: read udp 10.0.2.15:46007->10.0.2.3:53: i/o timeout
+
+
+
+ubuntu@ubuntu-xenial:~/kubernetes-course$ kubectl rollout status deployment/helloworld-deployment
+Waiting for rollout to finish: 2 out of 3 new replicas have been updated...
+
+
+
 
 
 
